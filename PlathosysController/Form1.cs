@@ -35,15 +35,17 @@ namespace PlathosysController
 
         private void LoadSettings()
         {
+            // Show / hide icons
             notifyIconHeadset.Visible = Properties.Settings.Default.HeadsetIconVisible;
             notifyIconSpeaker.Visible = Properties.Settings.Default.SpeakerIconVisible;
             notifyIconTraining.Visible = Properties.Settings.Default.TrainingIconVisible;
 
+            // Set checkbox in menu
             toolStripMenuItemHeadset.Checked = Properties.Settings.Default.HeadsetIconVisible;
             toolStripMenuItemSpeaker.Checked = Properties.Settings.Default.SpeakerIconVisible;
             toolStripMenuItemTraining.Checked = Properties.Settings.Default.TrainingIconVisible;
 
-            // Check to see the current state (running at startup or not)
+            // Set "Start with Windows" checkbox according to registry
             if (rkApp.GetValue("PlathosysController") == null)
                 toolStripMenuItemAutostart.Checked = false;
             else
@@ -57,6 +59,11 @@ namespace PlathosysController
 
         private void toolStripMenuItemHeadset_Click(object sender, EventArgs e)
         {
+            // Prevent of closing all icons, so that the app couldn't be controlled
+            if (!toolStripMenuItemSpeaker.Checked && !toolStripMenuItemTraining.Checked)
+                return;
+
+            ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
             notifyIconHeadset.Visible = ((ToolStripMenuItem)sender).Checked;
             Properties.Settings.Default.HeadsetIconVisible = notifyIconHeadset.Visible;
             Properties.Settings.Default.Save();
@@ -64,6 +71,11 @@ namespace PlathosysController
 
         private void toolStripMenuItemSpeaker_Click(object sender, EventArgs e)
         {
+            // Prevent of closing all icons, so that the app couldn't be controlled
+            if (!toolStripMenuItemHeadset.Checked && !toolStripMenuItemTraining.Checked)
+                return;
+
+            ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
             notifyIconSpeaker.Visible = ((ToolStripMenuItem)sender).Checked;
             Properties.Settings.Default.SpeakerIconVisible = notifyIconSpeaker.Visible;
             Properties.Settings.Default.Save();
@@ -71,6 +83,11 @@ namespace PlathosysController
 
         private void toolStripMenuItemTraining_Click(object sender, EventArgs e)
         {
+            // Prevent of closing all icons, so that the app couldn't be controlled
+            if (!toolStripMenuItemHeadset.Checked && !toolStripMenuItemSpeaker.Checked)
+                return;
+
+            ((ToolStripMenuItem)sender).Checked = !((ToolStripMenuItem)sender).Checked;
             notifyIconTraining.Visible = ((ToolStripMenuItem)sender).Checked;
             Properties.Settings.Default.TrainingIconVisible = notifyIconTraining.Visible;
             Properties.Settings.Default.Save();

@@ -86,7 +86,6 @@
             // toolStripMenuItemHeadset
             // 
             this.toolStripMenuItemHeadset.Checked = true;
-            this.toolStripMenuItemHeadset.CheckOnClick = true;
             this.toolStripMenuItemHeadset.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItemHeadset.Name = "toolStripMenuItemHeadset";
             this.toolStripMenuItemHeadset.Size = new System.Drawing.Size(189, 22);
@@ -96,7 +95,6 @@
             // toolStripMenuItemSpeaker
             // 
             this.toolStripMenuItemSpeaker.Checked = true;
-            this.toolStripMenuItemSpeaker.CheckOnClick = true;
             this.toolStripMenuItemSpeaker.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItemSpeaker.Name = "toolStripMenuItemSpeaker";
             this.toolStripMenuItemSpeaker.Size = new System.Drawing.Size(189, 22);
@@ -106,7 +104,6 @@
             // toolStripMenuItemTraining
             // 
             this.toolStripMenuItemTraining.Checked = true;
-            this.toolStripMenuItemTraining.CheckOnClick = true;
             this.toolStripMenuItemTraining.CheckState = System.Windows.Forms.CheckState.Checked;
             this.toolStripMenuItemTraining.Name = "toolStripMenuItemTraining";
             this.toolStripMenuItemTraining.Size = new System.Drawing.Size(189, 22);
@@ -163,6 +160,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
