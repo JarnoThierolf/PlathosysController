@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +14,9 @@ namespace PlathosysController
 {
     public partial class Form1 : Form
     {
+        // The path to the key where Windows looks for startup applications
+        RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
         public Form1()
         {
             // Prevent application from running twice
@@ -38,7 +42,12 @@ namespace PlathosysController
             toolStripMenuItemHeadset.Checked = Properties.Settings.Default.HeadsetIconVisible;
             toolStripMenuItemSpeaker.Checked = Properties.Settings.Default.SpeakerIconVisible;
             toolStripMenuItemTraining.Checked = Properties.Settings.Default.TrainingIconVisible;
-            bool startWithWindows = Properties.Settings.Default.StartWithWindows;
+
+            // Check to see the current state (running at startup or not)
+            if (rkApp.GetValue("PlathosysController") == null)
+                toolStripMenuItemAutostart.Checked = false;
+            else
+                toolStripMenuItemAutostart.Checked = true;
         }
 
         private void toolStripMenuItemClose_Click(object sender, EventArgs e)
@@ -48,28 +57,37 @@ namespace PlathosysController
 
         private void toolStripMenuItemHeadset_Click(object sender, EventArgs e)
         {
-            notifyIconHeadset.Visible = !(notifyIconHeadset.Visible);
+            notifyIconHeadset.Visible = ((ToolStripMenuItem)sender).Checked;
             Properties.Settings.Default.HeadsetIconVisible = notifyIconHeadset.Visible;
             Properties.Settings.Default.Save();
         }
 
         private void toolStripMenuItemSpeaker_Click(object sender, EventArgs e)
         {
-            notifyIconSpeaker.Visible = !(notifyIconSpeaker.Visible);
+            notifyIconSpeaker.Visible = ((ToolStripMenuItem)sender).Checked;
             Properties.Settings.Default.SpeakerIconVisible = notifyIconSpeaker.Visible;
             Properties.Settings.Default.Save();
         }
 
         private void toolStripMenuItemTraining_Click(object sender, EventArgs e)
         {
-            notifyIconTraining.Visible = !(notifyIconTraining.Visible);
+            notifyIconTraining.Visible = ((ToolStripMenuItem)sender).Checked;
             Properties.Settings.Default.TrainingIconVisible = notifyIconTraining.Visible;
             Properties.Settings.Default.Save();
         }
 
         private void toolStripMenuItemAutostart_Click(object sender, EventArgs e)
         {
-
+            if (((ToolStripMenuItem)sender).Checked)
+            {
+                // Add the value in the registry so that the application runs at startup
+                rkApp.SetValue("PlathosysController", Application.ExecutablePath);
+            }
+            else
+            {
+                // Remove the value from the registry so that the application doesn't start
+                rkApp.DeleteValue("PlathosysController", false);
+            }
         }
 
         private void notifyIconHeadset_MouseClick(object sender, MouseEventArgs e)
