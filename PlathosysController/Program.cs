@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NotifIcons
+namespace PlathosysController
 {
     static class Program
     {

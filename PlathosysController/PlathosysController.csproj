@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{812C6191-F259-4192-8A81-90528A0BAB7E}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>NotifIcons</RootNamespace>
-    <AssemblyName>NotifIcons</AssemblyName>
+    <RootNamespace>PlathosysController</RootNamespace>
+    <AssemblyName>PlathosysController</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -54,6 +54,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -62,6 +65,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -75,6 +79,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HP-ball.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\headsetOff.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\headsetOn.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\speakerOff.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\speakerOn.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\headsetEarOff.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\headsetEarOn.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

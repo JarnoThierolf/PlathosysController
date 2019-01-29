@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.329
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotifIcons", "NotifIcons\NotifIcons.csproj", "{812C6191-F259-4192-8A81-90528A0BAB7E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlathosysController", "PlathosysController\PlathosysController.csproj", "{812C6191-F259-4192-8A81-90528A0BAB7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
