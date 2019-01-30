@@ -43,7 +43,7 @@ namespace PlathosysController
                 Environment.Exit(0);
             }
 
-            _plathosysController = new PlathosysController(this);
+            _plathosysController = new PlathosysController();
             _plathosysController.HookChanged += OnHookChanged;
             _plathosysController.PlathosysDeviceReady += OnPlathosysDeviceReady;
             _plathosysController.NoDeviceFound += OnNoDeviceFound;
@@ -343,9 +343,9 @@ namespace PlathosysController
                     }
                     else
                     {
+                        _plathosysController.SetHeadset(true);
                         notifyIconTraining.Icon = Properties.Resources.headsetEarOff;
                         _trainingActive = false;
-                        _plathosysController.SetHeadset(true);
                         notifyIconHeadset.Icon = Properties.Resources.headsetOn;
                         _headsetActive = true;
                     }
@@ -409,9 +409,9 @@ namespace PlathosysController
                     }
                     else
                     {
+                        _plathosysController.SetTraining(true);
                         notifyIconHeadset.Icon = Properties.Resources.headsetOff;
                         _headsetActive = false;
-                        _plathosysController.SetTraining(true);
                         notifyIconTraining.Icon = Properties.Resources.headsetEarOn;
                         _trainingActive = true;
                     }

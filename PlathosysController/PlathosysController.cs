@@ -1,5 +1,4 @@
-﻿using PlathosysApiWrapper;
-using System;
+﻿using System;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -7,30 +6,23 @@ using Timer = System.Threading.Timer;
 
 namespace PlathosysController
 {
-    public class HookEventArgs : EventArgs
-    {
-        public bool HookOff { get; set; }
-    }
-
     class PlathosysController
     {
         public event EventHandler<HookEventArgs> HookChanged;
         public event EventHandler<EventArgs> PlathosysDeviceReady;
         public event EventHandler<EventArgs> NoDeviceFound;
 
-        Timer timerHook;
+        private Timer _timerHook;
         private Timer _timerInitPlathosys;
-        private NotifyIconContext _notifyIconContext;
         private bool _deviceWorking;
-        private bool hookOff;
+        private bool _hookOff;
 
-        public PlathosysController(NotifyIconContext notifyIconContext)
+        public PlathosysController()
         {
-            timerHook = new Timer(new TimerCallback(timerHook_Tick), null, Timeout.Infinite, Timeout.Infinite);
+            _timerHook = new Timer(new TimerCallback(timerHook_Tick), null, Timeout.Infinite, Timeout.Infinite);
             _timerInitPlathosys = new Timer(new TimerCallback(TimerInitPlathosys_Tick), null, 10, 1000);
-            _notifyIconContext = notifyIconContext;
             _deviceWorking = false;
-            hookOff = false;
+            _hookOff = false;
         }
 
         /// <summary>
@@ -41,9 +33,6 @@ namespace PlathosysController
             // choose specific USB ID or 0 for first Device found
             int vendorID = 0;
             int productID = 0;
-            // Variables to store found IDs
-            int selectedVendorID;
-            int selectedProductID;
             // Stringbuilder instances to store DeviceName and SerialNumber with max. 200 characters
             StringBuilder deviceName = new StringBuilder(200);
             StringBuilder serialNumber = new StringBuilder(200);
@@ -51,7 +40,7 @@ namespace PlathosysController
             try
             {
                 if (Plathosys.Opendevice(vendorID, productID,
-                    out selectedVendorID, out selectedProductID,
+                    out int selectedVendorID, out int selectedProductID,
                     deviceName, serialNumber) == false)
                 {
                     throw new Exception("No Plathosys device detected!");
@@ -71,22 +60,19 @@ namespace PlathosysController
         /// <returns>succesful?</returns>
         private bool InitPlathosys()
         {
-            byte info1, info2, info3, info4, info5, info6, info7, info8, info9, info10;
-            byte info11, info12, info13, info14, info15, info16;
-
             try
             {
-                if (Plathosys.ReadCurrentInfodB(out info1, out info2, out info3, out info4,
-                    out info5, out info6, out info7, out info8, out info9, out info10,
-                    out info11, out info12, out info13, out info14, out info15, out info16))
+                if (Plathosys.ReadCurrentInfodB(out byte info1, out byte info2, out byte info3, out byte info4,
+                    out byte info5, out byte info6, out byte info7, out byte info8, out byte info9, out byte info10,
+                    out byte info11, out byte info12, out byte info13, out byte info14, out byte info15, out byte info16))
                     return true;
             }
             catch
             {
-                Plathosys.Closedevice();
+                ReconnectDevice();
             }
 
-            hookOff = false;
+            _hookOff = false;
             return false;
         }
 
@@ -128,13 +114,17 @@ namespace PlathosysController
             {
                 OpenPlathosys();
 
-                // If initializing the Plathosys device to get correct hook status and turning speaker off is successful
-                if (InitPlathosys() && Plathosys.SetByListening(false))
+                // If initializing the Plathosys device to get correct hook status
+                // and turning off all accessories is successful
+                if (InitPlathosys() &&
+                    Plathosys.SetHeadsetActive(false) &&
+                    Plathosys.SetByListening(false) &&
+                    Plathosys.SetHeadsetEar(2))
                 {
                     // Stop this timmer
                     _timerInitPlathosys.Change(Timeout.Infinite, Timeout.Infinite);
                     // Start timer to monitor hook status
-                    timerHook.Change(10, 100);
+                    _timerHook.Change(10, 100);
                     _deviceWorking = true;
                     // Raise PlathosysDeviceRead Event
                     OnPlathosysDeviceReady();
@@ -158,18 +148,16 @@ namespace PlathosysController
             if (ReadHookPlathosys(out tmpHookOff))
             {
                 // Raise HookChanged event according to hookInfo if hook status changed
-                if (tmpHookOff != hookOff)
+                if (tmpHookOff != _hookOff)
                 {
-                    hookOff = tmpHookOff;
-                    OnHookChanged(hookOff);
+                    _hookOff = tmpHookOff;
+                    OnHookChanged(_hookOff);
                 }
             }
             else
             {
                 // Close connecion to Plathsoys device and retry
-                Plathosys.Closedevice();
-                timerHook.Change(Timeout.Infinite, Timeout.Infinite);
-                _timerInitPlathosys.Change(10, 1000);
+                ReconnectDevice();
             }
         }
 
@@ -244,7 +232,7 @@ namespace PlathosysController
         /// <summary>
         /// Set training function to given state
         /// </summary>
-        /// <param name="activate">1 for on and 2 for off</param>
+        /// <param name="activate">true for on and false for off</param>
         public void SetTraining(bool activate)
         {
             if (_deviceWorking == false)
@@ -265,9 +253,16 @@ namespace PlathosysController
         /// </summary>
         private void ReconnectDevice()
         {
+            _timerHook.Change(Timeout.Infinite, Timeout.Infinite);
             _deviceWorking = false;
             OnNoDeviceFound();
+            Plathosys.Closedevice();
             _timerInitPlathosys.Change(10, 1000);
         }
+    }
+
+    public class HookEventArgs : EventArgs
+    {
+        public bool HookOff { get; set; }
     }
 }
